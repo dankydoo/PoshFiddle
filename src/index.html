@@ -1,0 +1,101 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/jquery.terminal-0.9.1.css">
+
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script src="js/jquery.terminal-0.9.1.js"></script>
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    <script src="js/ace/ace.js"></script>
+    <script>
+        var terminal;
+        jQuery(function ($, undefined) {
+            $('#ps-terminal').terminal(function (command, term) {
+                terminal = term;
+                if (command !== '') {
+                    try {
+
+                        var result = ws.send(command);
+                        terminal.set_prompt('PS ' + new Date().getTime() + '>');
+                        if (result !== undefined) {
+                            term.echo(String(result));
+                        }
+                    } catch (e) {
+                        term.error(String(e));
+                    }
+                } else {
+                    term.echo('');
+                }
+            }, {
+                greetings: 'PoshFiddle - Remote Shell',
+                name: 'js_demo',
+                height: 400,
+                prompt: 'PS> '
+            });
+        });
+
+        // helper function: log message to screen
+        function log(msg) {
+            var para = document.createElement("p");
+            para.className = 'terminal--output is-console';
+            var node = document.createTextNode(msg);
+            para.appendChild(node);
+            document.getElementById('log').appendChild(para);
+        }
+
+        // setup websocket with callbacks
+        var ws = new WebSocket('ws://localhost:80/');
+        ws.onopen = function () {
+            log('Connected.');
+        };
+        ws.onclose = function () {
+            log('Disconnected.');
+        };
+        ws.onmessage = function (event) {
+            console.log(event);
+            terminal.echo(event.data);
+        };
+    </script>
+    <style type="text/css" media="screen">
+        #editor {
+
+            top: 0;
+            right: 0;
+            width:100%;
+            height: 400px;
+
+        }
+    </style>
+</head>
+<body>
+<div id="editor">function foo(items) {
+    var x = "All this is syntax highlighted";
+    return x;
+    }
+</div>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/powershell");
+</script>
+<div id="ps-console" class="terminal">
+    <div id="log" class="terminal"></div>
+</div>
+<div class="terminal">
+    <div id="command-line" class="terminal--input " contenteditable="true">
+
+    </div>
+</div>
+
+<div id="ps-terminal"></div>
+</body>
+</html>
