@@ -6,16 +6,20 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/jquery.terminal-0.9.1.css">
-
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
     <script src="js/jquery.terminal-0.9.1.js"></script>
-    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     <script src="js/ace/ace.js"></script>
+    <script src="js/ace/ext-language_tools.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script>
         var terminal;
         jQuery(function ($, undefined) {
@@ -53,7 +57,7 @@
         }
 
         // setup websocket with callbacks
-        var ws = new WebSocket('ws://localhost:80/');
+        var ws = new WebSocket('ws://localhost:81/');
         ws.onopen = function () {
             log('Connected.');
         };
@@ -79,15 +83,40 @@
     </style>
 </head>
 <body>
-<div id="editor">function foo(items) {
-    var x = "All this is syntax highlighted";
-    return x;
-    }
+<nav class="navbar navbar-inverse navbar-fixed-top" style="position:relative">
+    <div class="container" >
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Po*sh*Shell.net|com</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#editor">Code</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div id="editor">
+Get-Command | select-string container
 </div>
 <script>
+    ace.require("ace/ext/language_tools");
     var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
+    editor.setTheme("ace/theme/tomorrow");
     editor.getSession().setMode("ace/mode/powershell");
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+    });
 </script>
 <div id="ps-console" class="terminal">
     <div id="log" class="terminal"></div>
@@ -99,5 +128,6 @@
 </div>
 
 <div id="ps-terminal"></div>
+
 </body>
 </html>
