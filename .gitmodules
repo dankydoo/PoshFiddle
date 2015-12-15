@@ -1,0 +1,3 @@
+[submodule "websocketd/websocketd"]
+	path = websocketd/websocketd
+	url = https://github.com/dankydoo/websocketd.git
